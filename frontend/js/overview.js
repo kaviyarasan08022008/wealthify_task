@@ -125,9 +125,9 @@ WealthifyApp.prototype.renderCharts = function(data) {
     const colors = this.getThemeColors();
 
     const chartColors = [
-        '#10b981', '#34d399', '#059669', '#fbbf24', '#06b6d4',
-        '#f43f5e', '#14b8a6', '#047857', '#f59e0b', '#ec4899',
-        '#10b981', '#34d399', '#059669', '#fbbf24', '#06b6d4'
+        '#6366f1', '#3b82f6', '#06b6d4', '#14b8a6', '#fbbf24',
+        '#ec4899', '#818cf8', '#2563eb', '#0891b2', '#0d9488',
+        '#f59e0b', '#d946ef', '#4f46e5', '#60a5fa', '#22d3ee'
     ];
 
     // Bar Chart
