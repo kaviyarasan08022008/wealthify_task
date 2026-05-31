@@ -21,16 +21,28 @@ app.add_middleware(
 
 app.include_router(api_router)
 
+from fastapi.staticfiles import StaticFiles
+from fastapi import HTTPException
+
 # Serve frontend static files
-frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
+
+# Mount /js folder for modular scripts
+app.mount("/js", StaticFiles(directory=os.path.join(frontend_dir, "js")), name="js")
+# Mount /screenshots folder for dashboard images
+if os.path.exists(os.path.join(frontend_dir, "screenshots")):
+    app.mount("/screenshots", StaticFiles(directory=os.path.join(frontend_dir, "screenshots")), name="screenshots")
+
+@app.get("/pages/{page_name}.html", include_in_schema=False)
+def read_page(page_name: str):
+    path = os.path.join(frontend_dir, "pages", f"{page_name}.html")
+    if os.path.exists(path):
+        return FileResponse(path)
+    raise HTTPException(status_code=404, detail="Page not found")
 
 @app.get("/", include_in_schema=False)
 def read_index():
     return FileResponse(os.path.join(frontend_dir, "index.html"))
-
-@app.get("/app.js", include_in_schema=False)
-def read_js():
-    return FileResponse(os.path.join(frontend_dir, "app.js"))
 
 @app.get("/style.css", include_in_schema=False)
 def read_css():
