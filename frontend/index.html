@@ -4,111 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Wealthify — A modern mutual fund investment dashboard with real-time data, analytics, and portfolio tracking.">
-    <title>Wealthify — Mutual Fund Dashboard</title>
-
+    <title>Wealthify — Overview</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/overview.css">
 </head>
 <body>
-
-    <!-- Toast Container -->
     <div id="toast-container" aria-live="polite"></div>
-
     <div class="app-wrapper">
-
-        <!-- ═══════════════════════════════════ SIDEBAR ═══════════════════════════════════ -->
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
                     <div class="logo-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
                     <span class="logo-text">Wealthify</span>
                 </div>
-                <button class="sidebar-close" id="sidebar-close" aria-label="Close sidebar">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
             </div>
-
-            <div class="sidebar-section-label">MAIN MENU</div>
             <nav class="nav-menu" role="navigation" aria-label="Main navigation">
-                <a href="#" class="nav-item active" data-view="dashboard" id="nav-dashboard">
-                    <span class="nav-icon"><i class="fa-solid fa-house-chimney"></i></span>
+                <a href="index.html" class="nav-item active" id="nav-dashboard">
                     <span class="nav-label">Overview</span>
                     <span class="nav-indicator"></span>
                 </a>
-                <a href="#" class="nav-item" data-view="transactions" id="nav-transactions">
-                    <span class="nav-icon"><i class="fa-solid fa-money-bill-transfer"></i></span>
+                <a href="pages/transactions.html" class="nav-item" id="nav-transactions">
                     <span class="nav-label">Transactions</span>
                     <span class="nav-indicator"></span>
                 </a>
-                <a href="#" class="nav-item" data-view="investors" id="nav-investors">
-                    <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+                <a href="pages/investors.html" class="nav-item" id="nav-investors">
                     <span class="nav-label">All Investors</span>
                     <span class="nav-indicator"></span>
                 </a>
-                <a href="#" class="nav-item" data-view="funds" id="nav-funds">
-                    <span class="nav-icon"><i class="fa-solid fa-building-columns"></i></span>
+                <a href="pages/funds.html" class="nav-item" id="nav-funds">
                     <span class="nav-label">All Funds</span>
                     <span class="nav-indicator"></span>
                 </a>
-                <a href="#" class="nav-item" data-view="investor-summary" id="nav-investor-summary">
-                    <span class="nav-icon"><i class="fa-solid fa-users-viewfinder"></i></span>
+                <a href="pages/investor_summary.html" class="nav-item" id="nav-investor-summary">
                     <span class="nav-label">Investor Summary</span>
                     <span class="nav-indicator"></span>
                 </a>
-                <a href="#" class="nav-item" data-view="fund-summary" id="nav-fund-summary">
-                    <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+                <a href="pages/fund_summary.html" class="nav-item" id="nav-fund-summary">
                     <span class="nav-label">Fund Summary</span>
                     <span class="nav-indicator"></span>
                 </a>
             </nav>
-
+            <div class="api-status">
+                <span class="status-dot connecting" id="status-dot"></span>
+                <span class="status-text" id="status-text">Connecting...</span>
+            </div>
         </aside>
 
-        <!-- Overlay for mobile -->
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-        <!-- ══════════════════════════════════ MAIN CONTENT ══════════════════════════════════ -->
+        <!-- MAIN CONTENT -->
         <main class="main-content" id="main-content">
-
-            <!-- Top Header -->
-            <header class="top-header">
-                <div class="header-left">
-                    <button class="hamburger" id="hamburger" aria-label="Open menu">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <div class="breadcrumb" id="breadcrumb">
-                        <span><i class="fa-solid fa-house-chimney"></i></span>
-                        <span class="breadcrumb-sep">/</span>
-                        <span class="breadcrumb-current" id="breadcrumb-current">Overview</span>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="header-date">
-                        <i class="fa-regular fa-calendar"></i>
-                        <span id="header-date-text"></span>
-                    </div>
-                    <div class="user-avatar" title="Admin User">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff&bold=true&size=80" alt="Admin User">
-                        <div class="avatar-badge"></div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Views Container -->
             <div class="views-container" id="views-container">
-
-                <!-- ══════════ VIEW: DASHBOARD ══════════ -->
+                <!-- VIEW: DASHBOARD -->
                 <section id="dashboard" class="view active" aria-label="Dashboard Overview">
                     <div class="page-header">
                         <div class="page-title">
@@ -234,7 +189,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="dashboard-tbody">
-                                    <!-- Skeleton rows -->
                                     <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
                                     <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
                                     <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
@@ -247,344 +201,19 @@
                         </div>
                     </div>
                 </section>
+            </div>
+        </main>
+    </div>
 
-                <!-- ══════════ VIEW: INVESTOR SUMMARY ══════════ -->
-                <section id="investor-summary" class="view" aria-label="Investor Summary">
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>Investor Summary</h1>
-                            <p class="page-subtitle">Per-investor fund allocation and totals</p>
-                        </div>
-                        <div class="filters">
-                            <div class="filter-group search-group">
-                                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" id="inv-search" class="search-input" placeholder="Search investor name..." aria-label="Search investors">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label" for="inv-start-date">From</label>
-                                <input type="date" id="inv-start-date" class="date-input" aria-label="Start date">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label" for="inv-end-date">To</label>
-                                <input type="date" id="inv-end-date" class="date-input" aria-label="End date">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.resetPageAndLoad('investorSummary')">
-                                <i class="fa-solid fa-filter"></i> Apply
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card table-card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Investor Purchase Details</h3>
-                                <p class="card-subtitle" id="inv-count-label">Showing all records</p>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="data-table" id="investor-summary-table" aria-label="Investor summary table">
-                                <thead>
-                                    <tr>
-                                        <th class="accordion-chevron-cell"></th>
-                                        <th>Investor Name</th>
-                                        <th class="text-right">Total Invested (₹)</th>
-                                        <th class="text-right">Total Units</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="investor-summary-tbody">
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="table-empty hidden" id="investor-summary-empty">
-                            <i class="fa-solid fa-inbox"></i>
-                            <p>No investor records found.</p>
-                        </div>
-                        <div class="pagination-bar">
-                            <span class="pagination-info" id="inv-page-info">Page 1</span>
-                            <div class="pagination-controls">
-                                <button class="pag-btn" id="inv-prev" onclick="app.prevPage('investorSummary')" disabled aria-label="Previous page">
-                                    <i class="fa-solid fa-chevron-left"></i> Prev
-                                </button>
-                                <span class="pag-current" id="inv-page-num">1</span>
-                                <button class="pag-btn" id="inv-next" onclick="app.nextPage('investorSummary')" aria-label="Next page">
-                                    Next <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ══════════ VIEW: FUND SUMMARY ══════════ -->
-                <section id="fund-summary" class="view" aria-label="Fund Summary">
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>Fund-wise Summary</h1>
-                            <p class="page-subtitle">Fund breakdown by investor contributions</p>
-                        </div>
-                        <div class="filters">
-                            <div class="filter-group">
-                                <label class="filter-label" for="fund-start-date">From</label>
-                                <input type="date" id="fund-start-date" class="date-input" aria-label="Start date">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label" for="fund-end-date">To</label>
-                                <input type="date" id="fund-end-date" class="date-input" aria-label="End date">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.resetPageAndLoad('fundSummary')">
-                                <i class="fa-solid fa-filter"></i> Apply
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card table-card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Fund Investor Breakdown</h3>
-                                <p class="card-subtitle" id="fund-count-label">Showing all records</p>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="data-table" id="fund-summary-table" aria-label="Fund summary table">
-                                <thead>
-                                    <tr>
-                                        <th class="accordion-chevron-cell"></th>
-                                        <th>Mutual Fund</th>
-                                        <th class="text-right">Total Invested (₹)</th>
-                                        <th class="text-right">Total Units</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="fund-summary-tbody">
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="4"><div class="skeleton-line"></div></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="table-empty hidden" id="fund-summary-empty">
-                            <i class="fa-solid fa-inbox"></i>
-                            <p>No fund records found.</p>
-                        </div>
-                        <div class="pagination-bar">
-                            <span class="pagination-info" id="fund-page-info">Page 1</span>
-                            <div class="pagination-controls">
-                                <button class="pag-btn" id="fund-prev" onclick="app.prevPage('fundSummary')" disabled aria-label="Previous page">
-                                    <i class="fa-solid fa-chevron-left"></i> Prev
-                                </button>
-                                <span class="pag-current" id="fund-page-num">1</span>
-                                <button class="pag-btn" id="fund-next" onclick="app.nextPage('fundSummary')" aria-label="Next page">
-                                    Next <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ══════════ VIEW: ALL INVESTORS ══════════ -->
-                <section id="investors" class="view" aria-label="All Investors">
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>All Investors</h1>
-                            <p class="page-subtitle">Complete investor registry with portfolio totals</p>
-                        </div>
-                        <div class="filters">
-                            <div class="filter-group search-group">
-                                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" id="all-inv-search" class="search-input" placeholder="Search investor name..." aria-label="Search all investors">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label" for="all-inv-start-date">From</label>
-                                <input type="date" id="all-inv-start-date" class="date-input" aria-label="Start date">
-                            </div>
-                            <div class="filter-group">
-                                <label class="filter-label" for="all-inv-end-date">To</label>
-                                <input type="date" id="all-inv-end-date" class="date-input" aria-label="End date">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.resetPageAndLoad('investors')">
-                                <i class="fa-solid fa-filter"></i> Apply
-                            </button>
-                            <button class="btn btn-primary" onclick="app.openCrudModal('investor', 'add')">
-                                <i class="fa-solid fa-plus"></i> Add Investor
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card table-card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Investor Registry</h3>
-                                <p class="card-subtitle" id="all-inv-count-label">Showing all records</p>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="data-table" id="investors-list-table" aria-label="Investors list table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Investor Name</th>
-                                        <th>PAN Number</th>
-                                        <th class="text-right">Total Investment (₹)</th>
-                                        <th class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="investors-tbody">
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="table-empty hidden" id="investors-empty">
-                            <i class="fa-solid fa-inbox"></i>
-                            <p>No investors found.</p>
-                        </div>
-                        <div class="pagination-bar">
-                            <span class="pagination-info" id="all-inv-page-info">Page 1</span>
-                            <div class="pagination-controls">
-                                <button class="pag-btn" id="all-inv-prev" onclick="app.prevPage('investors')" disabled aria-label="Previous page">
-                                    <i class="fa-solid fa-chevron-left"></i> Prev
-                                </button>
-                                <span class="pag-current" id="all-inv-page-num">1</span>
-                                <button class="pag-btn" id="all-inv-next" onclick="app.nextPage('investors')" aria-label="Next page">
-                                    Next <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ══════════ VIEW: TRANSACTIONS ══════════ -->
-                <section id="transactions" class="view" aria-label="Transactions">
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>Transactions</h1>
-                            <p class="page-subtitle">Detailed transaction ledger and tracking</p>
-                        </div>
-                        <div class="filters">
-                            <div class="filter-group search-group">
-                                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" id="all-txns-search" class="search-input" placeholder="Search investor or fund..." aria-label="Search transactions">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.openCrudModal('transaction', 'add')">
-                                <i class="fa-solid fa-plus"></i> Add Transaction
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card table-card">
-                        <div class="table-responsive">
-                            <table class="data-table" id="transactions-list-table" aria-label="Transactions list table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Investor</th>
-                                        <th>Mutual Fund</th>
-                                        <th>Date</th>
-                                        <th class="text-right">Amount (₹)</th>
-                                        <th class="text-right">NAV (₹)</th>
-                                        <th class="text-right">Units</th>
-                                        <th class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transactions-tbody">
-                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="table-empty hidden" id="transactions-empty">
-                            <i class="fa-solid fa-inbox"></i>
-                            <p>No transactions found.</p>
-                        </div>
-                        <div class="pagination-bar">
-                            <span class="pagination-info" id="all-txns-page-info">Page 1</span>
-                            <div class="pagination-controls">
-                                <button class="pag-btn" id="all-txns-prev" onclick="app.prevPage('transactions')" disabled aria-label="Previous page">
-                                    <i class="fa-solid fa-chevron-left"></i> Prev
-                                </button>
-                                <span class="pag-current" id="all-txns-page-num">1</span>
-                                <button class="pag-btn" id="all-txns-next" onclick="app.nextPage('transactions')" aria-label="Next page">
-                                    Next <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ══════════ VIEW: FUNDS ══════════ -->
-                <section id="funds" class="view" aria-label="All Funds">
-                    <div class="page-header">
-                        <div class="page-title">
-                            <h1>All Funds</h1>
-                            <p class="page-subtitle">Mutual fund scheme directory and management</p>
-                        </div>
-                        <div class="filters">
-                            <div class="filter-group search-group">
-                                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" id="all-funds-search" class="search-input" placeholder="Search fund name or AMC..." aria-label="Search all funds">
-                            </div>
-                            <button class="btn btn-primary" onclick="app.openCrudModal('fund', 'add')">
-                                <i class="fa-solid fa-plus"></i> Add Fund
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card table-card">
-                        <div class="table-responsive">
-                            <table class="data-table" id="funds-list-table" aria-label="Funds list table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Fund Name</th>
-                                        <th>AMC Code</th>
-                                        <th>Scheme Type</th>
-                                        <th class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="funds-tbody">
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                    <tr class="skeleton-row"><td colspan="5"><div class="skeleton-line"></div></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="table-empty hidden" id="funds-empty">
-                            <i class="fa-solid fa-inbox"></i>
-                            <p>No funds found.</p>
-                        </div>
-                        <div class="pagination-bar">
-                            <span class="pagination-info" id="all-funds-page-info">Page 1</span>
-                            <div class="pagination-controls">
-                                <button class="pag-btn" id="all-funds-prev" onclick="app.prevPage('funds')" disabled aria-label="Previous page">
-                                    <i class="fa-solid fa-chevron-left"></i> Prev
-                                </button>
-                                <span class="pag-current" id="all-funds-page-num">1</span>
-                                <button class="pag-btn" id="all-funds-next" onclick="app.nextPage('funds')" aria-label="Next page">
-                                    Next <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </div><!-- /views-container -->
-        </main><!-- /main-content -->
-    </div><!-- /app-wrapper -->
-
-    <!-- ══════════════════════════════════ CRUD MODAL ══════════════════════════════════ -->
+    <!-- CRUD MODAL -->
     <div class="crud-modal-overlay" id="crud-modal-overlay">
         <div class="crud-modal">
             <div class="crud-modal-header">
-                <h3 id="crud-modal-title">Add Investor</h3>
+                <h3 id="crud-modal-title">Add Record</h3>
                 <button class="crud-modal-close" id="crud-modal-close" aria-label="Close modal">&times;</button>
             </div>
             <div class="crud-modal-body">
-                <form id="crud-form">
-                    <!-- Fields are generated dynamically by javascript -->
-                </form>
+                <form id="crud-form"></form>
             </div>
             <div class="crud-modal-footer">
                 <button class="btn btn-ghost" id="btn-modal-cancel">Cancel</button>
@@ -593,6 +222,13 @@
         </div>
     </div>
 
-    <script src="app.js?v=8"></script>
+    <!-- MODULAR SCRIPTS -->
+    <script src="js/main.js"></script>
+    <script src="js/overview.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/investors.js"></script>
+    <script src="js/funds.js"></script>
+    <script src="js/investor_summary.js"></script>
+    <script src="js/fund_summary.js"></script>
 </body>
 </html>

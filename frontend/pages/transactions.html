@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wealthify — A modern mutual fund investment dashboard with real-time data, analytics, and portfolio tracking.">
+    <title>Wealthify — Transactions</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/transactions.css">
+</head>
+<body>
+    <div id="toast-container" aria-live="polite"></div>
+    <div class="app-wrapper">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                    <span class="logo-text">Wealthify</span>
+                </div>
+            </div>
+            <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+                <a href="../index.html" class="nav-item" id="nav-dashboard">
+                    <span class="nav-label">Overview</span>
+                    <span class="nav-indicator"></span>
+                </a>
+                <a href="transactions.html" class="nav-item active" id="nav-transactions">
+                    <span class="nav-label">Transactions</span>
+                    <span class="nav-indicator"></span>
+                </a>
+                <a href="investors.html" class="nav-item" id="nav-investors">
+                    <span class="nav-label">All Investors</span>
+                    <span class="nav-indicator"></span>
+                </a>
+                <a href="funds.html" class="nav-item" id="nav-funds">
+                    <span class="nav-label">All Funds</span>
+                    <span class="nav-indicator"></span>
+                </a>
+                <a href="investor_summary.html" class="nav-item" id="nav-investor-summary">
+                    <span class="nav-label">Investor Summary</span>
+                    <span class="nav-indicator"></span>
+                </a>
+                <a href="fund_summary.html" class="nav-item" id="nav-fund-summary">
+                    <span class="nav-label">Fund Summary</span>
+                    <span class="nav-indicator"></span>
+                </a>
+            </nav>
+            <div class="api-status">
+                <span class="status-dot connecting" id="status-dot"></span>
+                <span class="status-text" id="status-text">Connecting...</span>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="main-content">
+            <div class="views-container" id="views-container">
+                <!-- VIEW: TRANSACTIONS -->
+                <section id="transactions" class="view active" aria-label="Transactions">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>Transactions</h1>
+                            <p class="page-subtitle">Detailed transaction ledger and tracking</p>
+                        </div>
+                        <div class="filters">
+                            <div class="filter-group search-group">
+                                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input type="text" id="all-txns-search" class="search-input" placeholder="Search investor or fund..." aria-label="Search transactions">
+                            </div>
+                            <button class="btn btn-primary" onclick="app.openCrudModal('transaction', 'add')">
+                                <i class="fa-solid fa-plus"></i> Add Transaction
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card table-card">
+                        <div class="table-responsive">
+                            <table class="data-table" id="transactions-list-table" aria-label="Transactions list table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Investor</th>
+                                        <th>Mutual Fund</th>
+                                        <th>Date</th>
+                                        <th class="text-right">Amount (₹)</th>
+                                        <th class="text-right">NAV (₹)</th>
+                                        <th class="text-right">Units</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-tbody">
+                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+                                    <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-empty hidden" id="transactions-empty">
+                            <i class="fa-solid fa-inbox"></i>
+                            <p>No transactions found.</p>
+                        </div>
+                        <div class="pagination-bar">
+                            <span class="pagination-info" id="all-txns-page-info">Page 1</span>
+                            <div class="pagination-controls">
+                                <button class="pag-btn" id="all-txns-prev" onclick="app.prevPage('transactions')" disabled aria-label="Previous page">
+                                    <i class="fa-solid fa-chevron-left"></i> Prev
+                                </button>
+                                <span class="pag-current" id="all-txns-page-num">1</span>
+                                <button class="pag-btn" id="all-txns-next" onclick="app.nextPage('transactions')" aria-label="Next page">
+                                    Next <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- CRUD MODAL -->
+    <div class="crud-modal-overlay" id="crud-modal-overlay">
+        <div class="crud-modal">
+            <div class="crud-modal-header">
+                <h3 id="crud-modal-title">Add Record</h3>
+                <button class="crud-modal-close" id="crud-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="crud-modal-body">
+                <form id="crud-form"></form>
+            </div>
+            <div class="crud-modal-footer">
+                <button class="btn btn-ghost" id="btn-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="btn-modal-save">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODULAR SCRIPTS -->
+    <script src="../js/main.js"></script>
+    <script src="../js/overview.js"></script>
+    <script src="../js/transactions.js"></script>
+    <script src="../js/investors.js"></script>
+    <script src="../js/funds.js"></script>
+    <script src="../js/investor_summary.js"></script>
+    <script src="../js/fund_summary.js"></script>
+</body>
+</html>

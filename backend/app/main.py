@@ -1,16 +1,20 @@
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-import os
-from app.routes.api import router as api_router
-from app.core.config import settings
+from fastapi.staticfiles import StaticFiles
 
+from app.core.config import settings
+from app.routes.api import router as api_router
+
+# Initialize the FastAPI Application
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Backend API for Mutual Fund Transaction Dashboard",
     version="1.0.0"
 )
 
+# Enable Cross-Origin Resource Sharing (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,22 +23,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include Core API Routes
 app.include_router(api_router)
 
-from fastapi.staticfiles import StaticFiles
-from fastapi import HTTPException
-
-# Serve frontend static files
+# Resolve Frontend Directory Path
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
 
-# Mount /js folder for modular scripts
+# Mount Frontend Assets Dynamically
 app.mount("/js", StaticFiles(directory=os.path.join(frontend_dir, "js")), name="js")
-# Mount /screenshots folder for dashboard images
+app.mount("/css", StaticFiles(directory=os.path.join(frontend_dir, "css")), name="css")
+
 if os.path.exists(os.path.join(frontend_dir, "screenshots")):
     app.mount("/screenshots", StaticFiles(directory=os.path.join(frontend_dir, "screenshots")), name="screenshots")
 
+# ── Dynamic Frontend Page Router ──
+
 @app.get("/pages/{page_name}.html", include_in_schema=False)
 def read_page(page_name: str):
+    """Dynamic route to serve subpages from the pages folder."""
     path = os.path.join(frontend_dir, "pages", f"{page_name}.html")
     if os.path.exists(path):
         return FileResponse(path)
@@ -42,43 +48,10 @@ def read_page(page_name: str):
 
 @app.get("/", include_in_schema=False)
 def read_index():
+    """Serve the central dashboard overview page."""
     return FileResponse(os.path.join(frontend_dir, "index.html"))
 
 @app.get("/style.css", include_in_schema=False)
 def read_css():
-    return FileResponse(os.path.join(frontend_dir, "style.css"))
-
-
-# ── Direct Transaction API Endpoints ──
-from fastapi import Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.core.database import get_db
-from app.services.data_service import data_service
-from typing import Optional
-
-@app.get("/itransactions")
-def get_itransactions(
-    search: Optional[str] = None,
-    page: int = 1,
-    limit: int = 10,
-    db: Session = Depends(get_db)
-):
-    """Direct endpoint to fetch all transactions."""
-    try:
-        return data_service.list_transactions(db, search, page, limit)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/transactions")
-def get_transactions(
-    search: Optional[str] = None,
-    page: int = 1,
-    limit: int = 10,
-    db: Session = Depends(get_db)
-):
-    """Direct endpoint to fetch all transactions (alias)."""
-    try:
-        return data_service.list_transactions(db, search, page, limit)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
+    """Redirect style.css requests to the primary main.css file."""
+    return FileResponse(os.path.join(frontend_dir, "css", "main.css"))
