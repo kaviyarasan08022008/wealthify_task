@@ -34,7 +34,8 @@ class DataService:
             Investor.name.label("investor_name"),
             func.sum(Transaction.amount).label("total_amount"),
             func.sum(Transaction.units).label("total_units"),
-        ).join(Transaction.investor)
+            func.count(func.distinct(Fund.id)).label("company_count"),
+        ).join(Transaction.investor).join(Transaction.fund)
         q_invs = self._apply_date_filter(q_invs, start_date, end_date)
         if search:
             q_invs = q_invs.filter(Investor.name.ilike(f"%{search}%"))
@@ -63,6 +64,7 @@ class DataService:
                 "investor_name": inv_r.investor_name,
                 "total_amount": float(inv_r.total_amount or 0),
                 "total_units": float(inv_r.total_units or 0),
+                "company_count": int(inv_r.company_count or 0),
                 "funds": [
                     {
                         "mutual_fund": fr.mutual_fund,
@@ -82,6 +84,7 @@ class DataService:
         db: Session,
         start_date: str = None,
         end_date: str = None,
+        search: str = None,
         page: int = 1,
         limit: int = 10,
     ) -> List[Dict]:
@@ -91,6 +94,8 @@ class DataService:
             func.sum(Transaction.units).label("total_units"),
         ).join(Transaction.fund)
         q_funds = self._apply_date_filter(q_funds, start_date, end_date)
+        if search:
+            q_funds = q_funds.filter(Fund.name.ilike(f"%{search}%"))
         
         q_funds = (
             q_funds.group_by(Fund.name)

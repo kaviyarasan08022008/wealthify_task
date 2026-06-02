@@ -15,6 +15,7 @@ class InvestorSummaryResponse(BaseModel):
     investor_name: str
     total_amount: float
     total_units: float
+    company_count: int
     funds: List[InvestorSummaryDetail]
 
     model_config = {"from_attributes": True}

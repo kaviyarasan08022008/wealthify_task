@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.routes.api import router as api_router
+from app.schemas.schemas import HealthResponse
 
 # Initialize the FastAPI Application
 app = FastAPI(
@@ -18,21 +19,25 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Include Core API Routes
 app.include_router(api_router)
+
+# Root health route alias for legacy/local file requests
+@app.get("/health", response_model=HealthResponse)
+def root_health_check():
+    return {"status": "healthy"}
 
 # Resolve Frontend Directory Path
 frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
 
-# Mount Frontend Assets Dynamically
-app.mount("/js", StaticFiles(directory=os.path.join(frontend_dir, "js")), name="js")
-app.mount("/css", StaticFiles(directory=os.path.join(frontend_dir, "css")), name="css")
-
+# Mount Frontend Assets Dynamically (Guarded for serverless deployment compatibility)
+if os.path.exists(os.path.join(frontend_dir, "js")):
+    app.mount("/js", StaticFiles(directory=os.path.join(frontend_dir, "js")), name="js")
+if os.path.exists(os.path.join(frontend_dir, "css")):
+    app.mount("/css", StaticFiles(directory=os.path.join(frontend_dir, "css")), name="css")
 if os.path.exists(os.path.join(frontend_dir, "screenshots")):
     app.mount("/screenshots", StaticFiles(directory=os.path.join(frontend_dir, "screenshots")), name="screenshots")
 
